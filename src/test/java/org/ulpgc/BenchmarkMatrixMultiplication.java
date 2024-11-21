@@ -17,7 +17,7 @@ public class BenchmarkMatrixMultiplication {
 
     @State(Scope.Thread)
     public static class Operands {
-        @Param({"10", "100", "500", "1000", "2000"})
+        @Param({"10", "100", "500", "1000", "2000", "3000"})
         private int size;
         private double[][] a;
         private double[][] b;
@@ -127,6 +127,12 @@ public class BenchmarkMatrixMultiplication {
 
         operands.memoryUsages.add(usedMemory);
         //operands.parallelThreadsUsed.add(threadsUsed);
+    }
+
+    @Benchmark
+    public void multiplicationVectorized(Operands operands) {
+        VectorizedMatrixMultiplication vectorizedMatrixMultiplication = new VectorizedMatrixMultiplication();
+        vectorizedMatrixMultiplication.execute(operands.a,operands.b);
     }
 
     private static long getMemory(Runtime runtime) {
