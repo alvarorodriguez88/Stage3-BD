@@ -113,6 +113,38 @@ public class BenchmarkParallelMethods {
 
     }
 
+    @Benchmark
+    public void synchronizedBlocksMatrixMultiplication(Operands operands) {
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
+        long beforeMemory = getMemory(runtime);
+
+        MatrixMultiplicationSynchronizedBlocks synchronizedBlocks = new MatrixMultiplicationSynchronizedBlocks(operands.a, operands.b, operands.nThreads);
+        synchronizedBlocks.multiply();
+
+        int threadsUsed = synchronizedBlocks.getUsedThreads();
+        long afterMemory = getMemory(runtime);
+        long usedMemory = afterMemory - beforeMemory;
+
+        operands.parallelThreadsUsed.add(threadsUsed);
+        operands.memoryUsages.add(usedMemory);
+    }
+
+    @Benchmark
+    public void semaphoreMatrixMultiplication(Operands operands) {
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
+        long beforeMemory = getMemory(runtime);
+
+        MatrixMultiplicationSemaphore semaphore = new MatrixMultiplicationSemaphore(operands.a, operands.b, operands.nThreads);
+        semaphore.multiply();
+
+        long afterMemory = getMemory(runtime);
+        long usedMemory = afterMemory - beforeMemory;
+
+        operands.memoryUsages.add(usedMemory);
+    }
+
     private static long getMemory(Runtime runtime) {
         return (runtime.totalMemory() / 1024 / 1024) - (runtime.freeMemory() / 1024 / 1024);
     }
