@@ -13,7 +13,7 @@ public class VectorizedMatrixMultiplication {
         int colsB = matrixB[0].length;
 
         if (colsA != rowsB) {
-            throw new IllegalArgumentException("El número de columnas de A debe ser igual al número de filas de B.");
+            throw new IllegalArgumentException("The number of columns in A must be equal to the number of rows in B.");
         }
 
         double[] A = new double[rowsA * colsA];
